@@ -211,13 +211,11 @@ posMensaje = 0
 if len(seq2) <= (3*400*200):
     while longitud > 0:
         if seq2[posSeq2] == 1:
-            content[ + posSeq2] = message[posMensaje]
+            content[40 + posSeq2] = message[posMensaje]
             posMensaje += 1
         posSeq2 += 1
         longitud -= 1
 longitud = len(seq2)
 content = frombits(content)
-for char in content:
-    print ord(char)
 with open('enc.jpg','wb') as enc:
     enc.write(content)
