@@ -190,7 +190,7 @@ def getSubSecuencia(unos):
         r += 1
     return seq2
 
-def insert(content):
+def insert(content, seq2, message):
     posSeq2 = 0
     posMensaje = 0
     longitud = len(seq2)
@@ -206,14 +206,34 @@ def insert(content):
     content = frombits(content)
     return content
 
+def extract(contenido, NumBits1):
+    posSeq2 = 0
+    mensaje = []
+    longitud = len(seq2)
+    while longitud > 0:
+        if seq2[posSeq2] == 1:
+            mensaje.append(contenido[40 + posSeq2])
+        posSeq2 += 1
+        longitud -=1
+    mensaje = frombits(mensaje)
+    return mensaje
 key = raw_input("Write a key>> ")
 while len(key) != 8:
     key = raw_input ("Wrong key, Key must be 8 characters.\n Write another key >> ")
 key = tobits(key)
 C = genSubKey(key)
-message = raw_input("Write a message>> ")
-message = tobits(message)
-NumBits1 = len(message)
+
+
+opt = raw_input("Choose an option\n\ti - Insert\n\te - Extract\n>>")
+
+if opt == 'i':
+    message = raw_input("Write a message>> ")
+    message = tobits(message)
+    NumBits1 = len(message)
+
+elif opt == 'e':
+    NumBits1 = input("Write the length of the text in bytes>> ")*8
+
 k = 0
 temp = []
 for i in range(48):
@@ -222,8 +242,16 @@ for i in range(48):
 seq1 = expandir(NumBits1 % 8, temp)
 secBin = getSecuenciaBin(NumBits1, C, seq1, k)
 seq2 = getSubSecuencia(NumBits1)
-with open('img.jpg','rb') as img:
-    content = tobits(img.read())
-content = insert(content)
-with open('enc.jpg','wb') as enc:
-    enc.write(content)
+
+if opt == 'i':
+    with open('img.jpg','rb') as img:
+        content = tobits(img.read())
+        content = insert(content, seq2, message)
+        with open('enc.jpg','wb') as enc:
+            enc.write(content)
+
+elif opt == 'e':
+    with open('enc.jpg','rb') as contenedor:
+        contenido = tobits(contenedor.read())
+        mensaje = extract(contenido, seq2)
+        print mensaje
