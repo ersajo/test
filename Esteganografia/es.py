@@ -180,13 +180,40 @@ def getSecuenciaBin(NumBits1, C, seq1, k):
             getSecuenciaBin(NumBits1, nC, seq1, k)
     return seq1
 
+def getSubSecuencia(unos):
+    r = 0
+    seq2 = []
+    while unos > 0:
+        if secBin[r] == 1:
+            unos -= 1
+        seq2.append(secBin[r])
+        r += 1
+    return seq2
+
+def insert(content):
+    posSeq2 = 0
+    posMensaje = 0
+    longitud = len(seq2)
+    if longitud <= (3*400*200):
+        while longitud > 0:
+            if seq2[posSeq2] == 1:
+                content[40 + posSeq2] = message[posMensaje]
+                posMensaje += 1
+            posSeq2 += 1
+            longitud -= 1
+    else:
+        print("Texto muy largo")
+    content = frombits(content)
+    return content
+
 key = raw_input("Write a key>> ")
 while len(key) != 8:
     key = raw_input ("Wrong key, Key must be 8 characters.\n Write another key >> ")
 key = tobits(key)
 C = genSubKey(key)
 message = raw_input("Write a message>> ")
-NumBits1 = len(message)*8
+message = tobits(message)
+NumBits1 = len(message)
 k = 0
 temp = []
 for i in range(48):
@@ -194,28 +221,9 @@ for i in range(48):
     temp.append(aux)
 seq1 = expandir(NumBits1 % 8, temp)
 secBin = getSecuenciaBin(NumBits1, C, seq1, k)
-unos = len(message)*8
-r = 0
-seq2 = []
-while unos > 0:
-    if secBin[r] == 1:
-        unos -= 1
-    seq2.append(secBin[r])
-    r += 1
-longitud = len(seq2)
-message = tobits(message)
+seq2 = getSubSecuencia(NumBits1)
 with open('img.jpg','rb') as img:
     content = tobits(img.read())
-posSeq2 = 0
-posMensaje = 0
-if len(seq2) <= (3*400*200):
-    while longitud > 0:
-        if seq2[posSeq2] == 1:
-            content[40 + posSeq2] = message[posMensaje]
-            posMensaje += 1
-        posSeq2 += 1
-        longitud -= 1
-longitud = len(seq2)
-content = frombits(content)
+content = insert(content)
 with open('enc.jpg','wb') as enc:
     enc.write(content)
