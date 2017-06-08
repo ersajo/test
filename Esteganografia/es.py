@@ -194,26 +194,30 @@ for i in range(48):
     temp.append(aux)
 seq1 = expandir(NumBits1 % 8, temp)
 secBin = getSecuenciaBin(NumBits1, C, seq1, k)
+unos = len(message)*8
 r = 0
 seq2 = []
-while secBin.count(1) != NumBits1:
+while unos > 0:
+    if secBin[r] == 1:
+        unos -= 1
     seq2.append(secBin[r])
     r += 1
+longitud = len(seq2)
 message = tobits(message)
+with open('img.jpg','rb') as img:
+    content = tobits(img.read())
+posSeq2 = 0
+posMensaje = 0
 if len(seq2) <= (3*400*200):
-    print seq2[:20]
-    with open('img.jpg','rb') as img:
-        content = img.read()
-        count = 0
-        message_count = 0
-        for i in content:
-            tempBit = tobits(i)
-            if count < 4:
-                pass
-            else:
-                for bit in seq2:
-                    if bit == 1:
-                        print bit
-                        tempBit[7] = message[message_count]
-                        message_count += 1
-            count += 1
+    while longitud > 0:
+        if seq2[posSeq2] == 1:
+            content[32 + posSeq2] = message[posMensaje]
+            posMensaje += 1
+        posSeq2 += 1
+        longitud -= 1
+longitud = len(seq2)
+content = frombits(content)
+for char in content:
+    print ord(char)
+with open('enc.jpg','wb') as enc:
+    enc.write(content)
