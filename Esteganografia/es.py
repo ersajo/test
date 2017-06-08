@@ -1,5 +1,4 @@
 import numpy
-import time
 perReduccion = [45, 21, 60, 12, 23, 49, 33,  5,
                 62, 57,  3, 38,  1, 19, 54,  9,
                 15, 20,  7, 50, 43 , 4, 46, 31,
@@ -217,6 +216,7 @@ def extract(contenido, NumBits1):
         longitud -=1
     mensaje = frombits(mensaje)
     return mensaje
+
 key = raw_input("Write a key>> ")
 while len(key) != 8:
     key = raw_input ("Wrong key, Key must be 8 characters.\n Write another key >> ")
