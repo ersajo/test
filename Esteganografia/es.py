@@ -211,7 +211,7 @@ posMensaje = 0
 if len(seq2) <= (3*400*200):
     while longitud > 0:
         if seq2[posSeq2] == 1:
-            content[32 + posSeq2] = message[posMensaje]
+            content[ + posSeq2] = message[posMensaje]
             posMensaje += 1
         posSeq2 += 1
         longitud -= 1
