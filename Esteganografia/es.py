@@ -244,14 +244,14 @@ secBin = getSecuenciaBin(NumBits1, C, seq1, k)
 seq2 = getSubSecuencia(NumBits1)
 
 if opt == 'i':
-    with open('img.jpg','rb') as img:
+    with open('img.png','rb') as img:
         content = tobits(img.read())
         content = insert(content, seq2, message)
-        with open('enc.jpg','wb') as enc:
+        with open('enc.png','wb') as enc:
             enc.write(content)
 
 elif opt == 'e':
-    with open('enc.jpg','rb') as contenedor:
+    with open('enc.png','rb') as contenedor:
         contenido = tobits(contenedor.read())
         mensaje = extract(contenido, seq2)
         print mensaje
