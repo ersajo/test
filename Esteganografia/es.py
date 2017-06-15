@@ -1,4 +1,7 @@
+#!/usr/bin/python
+# -*- coding: iso-8859-15 -*-
 import numpy
+from Crypto.Cipher import DES
 perReduccion = [45, 21, 60, 12, 23, 49, 33,  5,
                 62, 57,  3, 38,  1, 19, 54,  9,
                 15, 20,  7, 50, 43 , 4, 46, 31,
@@ -189,14 +192,14 @@ def getSubSecuencia(unos):
         r += 1
     return seq2
 
-def insert(content, seq2, message):
+def insert(content, seq2, message,imglen):
     posSeq2 = 0
     posMensaje = 0
     longitud = len(seq2)
-    if longitud <= (3*400*200):
+    if longitud <= ((imglen - 684) * 8):
         while longitud > 0:
             if seq2[posSeq2] == 1:
-                content[40 + posSeq2] = message[posMensaje]
+                content[(684 * 8) + posSeq2] = message[posMensaje]
                 posMensaje += 1
             posSeq2 += 1
             longitud -= 1
@@ -211,12 +214,29 @@ def extract(contenido, NumBits1):
     longitud = len(seq2)
     while longitud > 0:
         if seq2[posSeq2] == 1:
-            mensaje.append(contenido[40 + posSeq2])
+            mensaje.append(contenido[(684 * 8) + posSeq2])
         posSeq2 += 1
         longitud -=1
     mensaje = frombits(mensaje)
     return mensaje
 
+"""cipher = DES.new('12345678', DES.MODE_OFB, '12345678')
+cifrado = cipher.encrypt('Hola    ')
+with open('file.txt', 'w') as archivo:
+    archivo.write(cifrado)
+print cifrado
+for byte in cifrado:
+    print ord(byte)
+cipher = DES.new('12345678', DES.MODE_OFB, '12345678')
+with open('file.txt', 'r') as archivo:
+    mensaje = archivo.read()
+print "-----"
+print len(mensaje)
+print "-----"
+for byte in mensaje:
+    print ord(byte)
+mensaje = cipher.decrypt(mensaje)
+print mensaje"""
 key = raw_input("Write a key>> ")
 while len(key) != 8:
     key = raw_input ("Wrong key, Key must be 8 characters.\n Write another key >> ")
@@ -245,13 +265,17 @@ seq2 = getSubSecuencia(NumBits1)
 
 if opt == 'i':
     with open('img.png','rb') as img:
-        content = tobits(img.read())
-        content = insert(content, seq2, message)
+        content = img.read()
+        imglen = len(content)
+        content  = tobits(content)
+        content = insert(content, seq2, message, imglen)
         with open('enc.png','wb') as enc:
             enc.write(content)
 
 elif opt == 'e':
-    with open('enc.png','rb') as contenedor:
-        contenido = tobits(contenedor.read())
+    with open('prueba.png','rb') as contenedor:
+        contenido = contenedor.read()
+        contenido = tobits(contenido)
+        print contenido[:1000]
         mensaje = extract(contenido, seq2)
         print mensaje

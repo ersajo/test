@@ -7,3 +7,9 @@ response.raw.decode_content = True  # Required to decompress gzip/deflate compre
 with open('img.png','wb') as img:
     shutil.copyfileobj(response.raw, img)
 del response
+
+with open('img.png','rb') as lectura:
+    entrada = lectura.read()
+
+print len(entrada)
+print entrada[684]
